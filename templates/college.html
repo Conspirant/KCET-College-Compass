@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCET College Compass | Engineering Admission Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Add Bootstrap JavaScript and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --text-color: #2c3e50;
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 2rem;
+            margin-top: 0;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            padding: 2rem;
+            border-radius: var(--border-radius);
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .header-section p {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Disclaimer Styles */
+        .disclaimer-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+            border-radius: var(--border-radius);
+            border-left: 5px solid #e74c3c;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: pulseAttention 2s infinite;
+        }
+
+        .disclaimer-section::before {
+            content: "⚠️";
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            font-size: 6rem;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        .disclaimer-title {
+            color: #e74c3c;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .disclaimer-content {
+            font-size: 0.95rem;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .disclaimer-points {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .disclaimer-points li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer-points li::before {
+            content: "•";
+            color: #e74c3c;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        @keyframes pulseAttention {
+            0% { box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1); }
+            50% { box-shadow: 0 4px 25px rgba(231, 76, 60, 0.2); }
+            100% { box-shadow: 0 4px 15px rgba(231, 76, 60, 0.1); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control, .form-select {
+            border-radius: var(--border-radius);
+            border: 2px solid #e0e0e0;
+            padding: 0.75rem;
+            transition: all var(--transition-speed) ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all var(--transition-speed) ease;
+            width: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            animation: buttonPulse 1.5s infinite;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .table {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: white;
+            animation: fadeIn 1s ease;
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: scale(1.01);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--secondary-color);
+            border-top: 6px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .results-section {
+            animation: fadeInUp 1s ease;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge.likely {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+
+        .status-badge.unlikely {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+
+        .status-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .form-label i {
+            color: var(--accent-color);
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .form-group:hover .form-label {
+            transform: translateX(5px);
+        }
+
+        .form-group:hover .form-label i {
+            transform: scale(1.2);
+            color: var(--accent-color);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .alert {
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Add these new styles */
+        .course-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .course-group-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: var(--border-radius);
+        }
+
+        .course-option {
+            padding-left: 1.5rem !important;
+        }
+
+        .course-code {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .course-description {
+            font-size: 0.85rem;
+            color: #666;
+            display: block;
+            margin-top: 0.2rem;
+        }
+
+        /* Enhance form controls */
+        .form-select {
+            padding-right: 2.5rem;
+            background-position: right 1rem center;
+        }
+
+        /* Add pulsing effect to the submit button */
+        @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-primary:hover {
+            animation: buttonPulse 1.5s infinite;
+        }
+
+        /* Enhance card transitions */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add subtle gradient to header */
+        .header-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+
+        /* Enhance table appearance */
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: scale(1.01);
+        }
+
+        /* Add shadow to status badges */
+        .status-badge {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .status-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1rem;
+            }
+            .btn-primary {
+                width: 100%;
+            }
+            .header-section h1 {
+                font-size: 2rem;
+            }
+
+            /* Mobile Optimizations */
+            .header-section {
+                margin-bottom: 1.5rem;
+            }
+
+            .header-section p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+
+            .disclaimer-section {
+                margin: 0.5rem;
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .disclaimer-section::before {
+                font-size: 4rem;
+                top: -10px;
+                right: -10px;
+            }
+
+            .disclaimer-title {
+                font-size: 1.1rem;
+            }
+
+            .disclaimer-content {
+                font-size: 0.9rem;
+            }
+
+            .disclaimer-points li {
+                margin-bottom: 0.75rem;
+                line-height: 1.4;
+            }
+
+            .form-section {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+
+            .form-label {
+                font-size: 0.95rem;
+            }
+
+            .form-control, .form-select {
+                font-size: 0.95rem;
+                padding: 0.5rem;
+            }
+
+            .form-check-label {
+                font-size: 0.9rem;
+                line-height: 1.3;
+            }
+
+            .table {
+                font-size: 0.9rem;
+            }
+
+            .table td, .table th {
+                padding: 0.5rem;
+            }
+
+            /* Make table scrollable horizontally on mobile */
+            .table-responsive {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                width: calc(100% + 2rem);
+            }
+
+            /* Adjust status badges for mobile */
+            .status-badge {
+                padding: 0.25rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            /* Improve form spacing on mobile */
+            .mb-3 {
+                margin-bottom: 0.75rem !important;
+            }
+
+            .mb-4 {
+                margin-bottom: 1rem !important;
+            }
+
+            /* Make loading overlay more visible on mobile */
+            .loading-overlay {
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            .loading-spinner {
+                width: 40px;
+                height: 40px;
+                border-width: 4px;
+            }
+
+            /* Improve button appearance on mobile */
+            .btn-primary {
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
+                margin-top: 0.5rem;
+            }
+
+            /* Adjust card shadow for better mobile visibility */
+            .card {
+                box-shadow: 0 4px 15px rgba(31, 38, 135, 0.1);
+            }
+
+            .card:hover {
+                transform: none;
+                box-shadow: 0 4px 15px rgba(31, 38, 135, 0.1);
+            }
+
+            /* Optimize animations for mobile */
+            @keyframes pulseAttention {
+                0% { box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1); }
+                50% { box-shadow: 0 2px 12px rgba(231, 76, 60, 0.2); }
+                100% { box-shadow: 0 2px 8px rgba(231, 76, 60, 0.1); }
+            }
+        }
+
+        /* Add styles for medium-sized devices */
+        @media (min-width: 577px) and (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .header-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .disclaimer-section {
+                margin: 1rem;
+                padding: 1.25rem;
+            }
+
+            .form-section {
+                padding: 1.5rem;
+            }
+
+            .table td, .table th {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Optimize table for all screen sizes */
+        @media (max-width: 992px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 800px;
+            }
+
+            /* Add horizontal scroll indicator */
+            .table-responsive::after {
+                content: "⟷ Scroll horizontally to view more";
+                display: block;
+                text-align: center;
+                padding: 0.5rem;
+                color: var(--secondary-color);
+                font-size: 0.85rem;
+                font-style: italic;
+            }
+        }
+
+        /* Fix iOS-specific issues */
+        @supports (-webkit-touch-callout: none) {
+            .form-control, .form-select {
+                font-size: 16px; /* Prevent zoom on focus */
+            }
+
+            .table-responsive {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Mobile-friendly styles */
+        @media (max-width: 768px) {
+            .table-responsive {
+                margin: -15px;  /* Negative margin to maximize space */
+            }
+            
+            .table th, .table td {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .form-select {
+                font-size: 0.9rem;
+                padding: 0.4rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .card {
+                border-radius: 0;
+                margin: -1px;
+            }
+            
+            /* Optimize table for mobile */
+            .table-mobile {
+                display: block;
+                width: 100%;
+            }
+            
+            .table-mobile thead {
+                display: none;
+            }
+            
+            .table-mobile tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 0.25rem;
+            }
+            
+            .table-mobile tbody td {
+                display: block;
+                text-align: right;
+                padding: 0.5rem;
+                position: relative;
+                padding-left: 50%;
+            }
+            
+            .table-mobile tbody td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0.5rem;
+                width: 45%;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>
+                <i class="fas fa-compass"></i>
+                KCET College Compass
+            </h1>
+            <p>Advanced Engineering College Analytics & Admission Insights</p>
+        </div>
+
+        <div class="disclaimer-section animate__animated animate__fadeIn">
+            <div class="disclaimer-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                IMPORTANT DISCLAIMER
+            </div>
+            <div class="disclaimer-content">
+                <ul class="disclaimer-points">
+                    <li>This tool currently provides cutoff data for general categories (GM, SC, ST, etc.). Hyderabad-Karnataka (HK) region data will be added in future updates.</li>
+                    <li>The predictions are for <strong>informational and educational purposes only</strong> and do not guarantee admission.</li>
+                    <li>Actual cutoffs may vary based on reservation policies, seat matrix changes, and updated counseling rounds.</li>
+                    <li>Always verify information with the official KEA (Karnataka Examinations Authority) website before making decisions.</li>
+                    <li><strong>USE AT YOUR OWN RISK:</strong> The creators are not responsible for any discrepancies, decisions, or consequences arising from the use of this data.</li>
+                </ul>
+                <div style="font-size: 0.9rem; color: #e74c3c; font-style: italic; margin-top: 1rem;">
+                    By using this tool, you acknowledge that you have read and understood this disclaimer.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <form id="cutoffForm">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="rank" class="form-label">
+                                <i class="fas fa-trophy"></i> Your Rank
+                            </label>
+                            <input type="number" id="rank" name="rank" class="form-control" min="1" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-users"></i> Category
+                            </label>
+                            <select id="category" name="category" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <!-- Base Categories -->
+                                <optgroup label="General Merit">
+                                    <option value="GM">General Merit (GM)</option>
+                                    <option value="GMH">General Merit - HK (GMH)</option>
+                                    <option value="GMK">General Merit - KK (GMK)</option>
+                                    <option value="GMR">General Merit - Rural (GMR)</option>
+                                    <option value="GMKH">General Merit - KK & HK (GMKH)</option>
+                                    <option value="GMRH">General Merit - Rural & HK (GMRH)</option>
+                                </optgroup>
+                                
+                                <!-- Category 1 -->
+                                <optgroup label="Category 1">
+                                    <option value="1G">Category 1 (1G)</option>
+                                    <option value="1H">Category 1 - HK (1H)</option>
+                                    <option value="1K">Category 1 - KK (1K)</option>
+                                    <option value="1R">Category 1 - Rural (1R)</option>
+                                    <option value="1KH">Category 1 - KK & HK (1KH)</option>
+                                    <option value="1RH">Category 1 - Rural & HK (1RH)</option>
+                                </optgroup>
+                                
+                                <!-- Category 2A -->
+                                <optgroup label="Category 2A">
+                                    <option value="2AG">Category 2A (2AG)</option>
+                                    <option value="2AH">Category 2A - HK (2AH)</option>
+                                    <option value="2AK">Category 2A - KK (2AK)</option>
+                                    <option value="2AR">Category 2A - Rural (2AR)</option>
+                                    <option value="2AKH">Category 2A - KK & HK (2AKH)</option>
+                                    <option value="2ARH">Category 2A - Rural & HK (2ARH)</option>
+                                </optgroup>
+                                
+                                <!-- Category 2B -->
+                                <optgroup label="Category 2B">
+                                    <option value="2BG">Category 2B (2BG)</option>
+                                    <option value="2BH">Category 2B - HK (2BH)</option>
+                                    <option value="2BK">Category 2B - KK (2BK)</option>
+                                    <option value="2BR">Category 2B - Rural (2BR)</option>
+                                    <option value="2BKH">Category 2B - KK & HK (2BKH)</option>
+                                    <option value="2BRH">Category 2B - Rural & HK (2BRH)</option>
+                                </optgroup>
+                                
+                                <!-- Category 3A -->
+                                <optgroup label="Category 3A">
+                                    <option value="3AG">Category 3A (3AG)</option>
+                                    <option value="3AH">Category 3A - HK (3AH)</option>
+                                    <option value="3AK">Category 3A - KK (3AK)</option>
+                                    <option value="3AR">Category 3A - Rural (3AR)</option>
+                                    <option value="3AKH">Category 3A - KK & HK (3AKH)</option>
+                                    <option value="3ARH">Category 3A - Rural & HK (3ARH)</option>
+                                </optgroup>
+                                
+                                <!-- Category 3B -->
+                                <optgroup label="Category 3B">
+                                    <option value="3BG">Category 3B (3BG)</option>
+                                    <option value="3BH">Category 3B - HK (3BH)</option>
+                                    <option value="3BK">Category 3B - KK (3BK)</option>
+                                    <option value="3BR">Category 3B - Rural (3BR)</option>
+                                    <option value="3BKH">Category 3B - KK & HK (3BKH)</option>
+                                    <option value="3BRH">Category 3B - Rural & HK (3BRH)</option>
+                                </optgroup>
+                                
+                                <!-- SC Categories -->
+                                <optgroup label="Scheduled Caste">
+                                    <option value="SC">Scheduled Caste (SC)</option>
+                                    <option value="SCH">SC - HK (SCH)</option>
+                                    <option value="SCK">SC - KK (SCK)</option>
+                                    <option value="SCR">SC - Rural (SCR)</option>
+                                    <option value="SCKH">SC - KK & HK (SCKH)</option>
+                                    <option value="SCRH">SC - Rural & HK (SCRH)</option>
+                                </optgroup>
+                                
+                                <!-- ST Categories -->
+                                <optgroup label="Scheduled Tribe">
+                                    <option value="ST">Scheduled Tribe (ST)</option>
+                                    <option value="STH">ST - HK (STH)</option>
+                                    <option value="STK">ST - KK (STK)</option>
+                                    <option value="STR">ST - Rural (STR)</option>
+                                    <option value="STKH">ST - KK & HK (STKH)</option>
+                                    <option value="STRH">ST - Rural & HK (STRH)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="year" class="form-label">
+                                <i class="fas fa-calendar"></i> Academic Year
+                            </label>
+                            <select id="year" name="year" class="form-select" required>
+                                <option value="">Select Year</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="round" class="form-label">
+                                <i class="fas fa-clock"></i> Admission Round
+                            </label>
+                            <select id="round" name="round_name" class="form-select" required>
+                                <option value="">Select Round</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="institute" class="form-label">
+                                <i class="fas fa-university"></i> Institution
+                            </label>
+                            <select id="institute" name="institute" class="form-select">
+                                <option value="">All Institutions</option>
+                                {% for inst in institutes %}
+                                    <option value="{{ inst.key }}">{{ inst.name }} ({{ inst.code }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="course" class="form-label">
+                                <i class="fas fa-graduation-cap"></i> Engineering Branch
+                            </label>
+                            <select id="course" name="course" class="form-select" required>
+                                <option value="All Courses">All Branches</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input type="checkbox" id="include_nearby" name="include_nearby" class="form-check-input">
+                    <label for="include_nearby" class="form-check-label">
+                        <i class="fas fa-arrows-alt-h"></i> Include Nearby Ranks (±10% of your rank)
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Analyze Options
+                </button>
+            </form>
+        </div>
+
+        <div id="result" class="card results-section d-none">
+            <h3 class="mb-4">
+                <i class="fas fa-chart-bar"></i> College Analysis Results
+            </h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Institution</th>
+                            <th>Branch</th>
+                            <th>Category</th>
+                            <th>Cutoff Rank</th>
+                            <th>Round</th>
+                            <th>Year</th>
+                            <th>Admission Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cutoffTable">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="error" class="alert alert-danger d-none" role="alert"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const roundsByYear = {
+                '2019': ['2019 Round 1', '2019 Round 2', '2019 Round 3'],
+                '2020': ['2020 Round 1', '2020 Round 2', '2020 Round 3'],
+                '2021': ['2021 Round 1', '2021 Round 2', '2021 Round 3'],
+                '2022': ['2022 Round 1', '2022 Round 2', '2022 Round 3'],
+                '2023': ['2023 Extended Round', '2023 Round 1', '2023 Round 2'],
+                '2024': ['2024 Mock Round 1', '2024 Mock Round 2', '2024 Round 1', '2024 Round 2', '2024 Round 3']
+            };
+
+            let currentRequest = null;
+
+            $(document).ajaxStart(function() {
+                $('.loading-overlay').fadeIn(300);
+            }).ajaxStop(function() {
+                $('.loading-overlay').fadeOut(300);
+            });
+
+            $('#year').change(function() {
+                const year = $(this).val();
+                const $round = $('#round');
+                $round.empty().append('<option value="">Select Round</option>');
+                
+                if (year && roundsByYear[year]) {
+                    // Add "All Rounds" option for the selected year
+                    $round.append(`<option value="${year} All Rounds">${year} All Rounds</option>`);
+                    
+                    // Add individual rounds
+                    roundsByYear[year].forEach(round => {
+                        // Only add mock rounds for 2024, skip for historical years
+                        if (!round.includes('Mock') || year === '2024') {
+                            $round.append(`<option value="${round}">${round}</option>`);
+                        }
+                    });
+                }
+                
+                // Reset results when year changes
+                $('#result').addClass('d-none');
+                $('#error').addClass('d-none');
+            });
+
+            // Trigger initial load of rounds for pre-selected year if any
+            if ($('#year').val()) {
+                $('#year').trigger('change');
+            }
+
+            // Course information mapping with official KEA terms
+            const courseInfo = {
+                'CSE': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Engineering',
+                    description: 'Core computer science focusing on software development, algorithms, and system design'
+                },
+                'AI & ML': {
+                    group: 'Computer Science & IT',
+                    name: 'Artificial Intelligence & Machine Learning',
+                    description: 'Advanced artificial intelligence concepts, machine learning algorithms, and data analytics'
+                },
+                'ISE': {
+                    group: 'Computer Science & IT',
+                    name: 'Information Science & Engineering',
+                    description: 'Information systems, databases, and enterprise software development'
+                },
+                'DS': {
+                    group: 'Computer Science & IT',
+                    name: 'Data Science & Engineering',
+                    description: 'Data science, big data analytics, statistical modeling, and data visualization'
+                },
+                'CY': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Engineering (Cyber Security)',
+                    description: 'Network security, cryptography, and cyber defense systems'
+                },
+                'ECE': {
+                    group: 'Electronics & Communication',
+                    name: 'Electronics & Communication Engineering',
+                    description: 'Digital electronics, communication systems, and signal processing'
+                },
+                'EEE': {
+                    group: 'Electronics & Communication',
+                    name: 'Electrical & Electronics Engineering',
+                    description: 'Power systems, control systems, and electrical machines'
+                },
+                'MECH': {
+                    group: 'Mechanical & Manufacturing',
+                    name: 'Mechanical Engineering',
+                    description: 'Machine design, thermal engineering, and manufacturing processes'
+                },
+                'CIVIL': {
+                    group: 'Civil & Architecture',
+                    name: 'Civil Engineering',
+                    description: 'Structural engineering, construction technology, and infrastructure design'
+                },
+                'AERO': {
+                    group: 'Aerospace & Aviation',
+                    name: 'Aerospace Engineering',
+                    description: 'Aircraft design, aerodynamics, and aerospace systems'
+                },
+                'BT': {
+                    group: 'Biotechnology & Medical',
+                    name: 'Biotechnology Engineering',
+                    description: 'Genetic engineering, biochemistry, and bioprocess technology'
+                },
+                'CHEM': {
+                    group: 'Chemical & Mining',
+                    name: 'Chemical Engineering',
+                    description: 'Chemical processes, reactor design, and industrial chemistry'
+                },
+                'RA': {
+                    group: 'Robotics & AI',
+                    name: 'Robotics & Automation Engineering',
+                    description: 'Robot design, control systems, and industrial automation'
+                },
+                'AI': {
+                    group: 'Robotics & AI',
+                    name: 'Artificial Intelligence Engineering',
+                    description: 'Artificial intelligence systems and applications'
+                },
+                'CA': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Engineering (AI & ML)',
+                    description: 'AI/ML applications in computer science'
+                },
+                'AD': {
+                    group: 'Robotics & AI',
+                    name: 'Artificial Intelligence & Data Science Engineering',
+                    description: 'AI and data science applications'
+                },
+                'IM': {
+                    group: 'Industrial & Management',
+                    name: 'Industrial Engineering & Management',
+                    description: 'Industrial processes and management'
+                },
+                'EI': {
+                    group: 'Electronics & Communication',
+                    name: 'Electronics & Instrumentation Engineering',
+                    description: 'Electronic instrumentation and control'
+                },
+                'ET': {
+                    group: 'Electronics & Communication',
+                    name: 'Electronics & Telecommunication Engineering',
+                    description: 'Telecommunications and electronic systems'
+                },
+                'AU': {
+                    group: 'Mechanical & Manufacturing',
+                    name: 'Automobile Engineering',
+                    description: 'Automotive systems and design'
+                },
+                'CB': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Business Systems',
+                    description: 'Computer science with business applications'
+                },
+                'CD': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Design Engineering',
+                    description: 'Computer science with design principles'
+                },
+                'EV': {
+                    group: 'Electronics & Communication',
+                    name: 'Electronics & Communication (VLSI Design)',
+                    description: 'VLSI design and embedded systems'
+                },
+                'IC': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Engineering (IoT & Cyber Security)',
+                    description: 'IoT systems and cybersecurity'
+                },
+                'MD': {
+                    group: 'Electronics & Communication',
+                    name: 'Medical Electronics Engineering',
+                    description: 'Medical electronics and instrumentation'
+                },
+                'RI': {
+                    group: 'Robotics & AI',
+                    name: 'Robotics & Artificial Intelligence Engineering',
+                    description: 'Robotics with AI applications'
+                },
+                'OT': {
+                    group: 'Industrial & Management',
+                    name: 'Industrial IoT Engineering',
+                    description: 'Industrial Internet of Things'
+                },
+                'ES': {
+                    group: 'Electronics & Communication',
+                    name: 'Electronics & Computer Engineering',
+                    description: 'Electronics and computer systems integration'
+                },
+                'TC': {
+                    group: 'Electronics & Communication',
+                    name: 'Telecommunication Engineering',
+                    description: 'Telecommunication systems and networks'
+                },
+                'MI': {
+                    group: 'Chemical & Mining',
+                    name: 'Mining Engineering',
+                    description: 'Mining technology and operations'
+                },
+                'BR': {
+                    group: 'Biotechnology & Medical',
+                    name: 'Biomedical & Robotics Engineering',
+                    description: 'Biomedical instrumentation and robotics'
+                },
+                'CV': {
+                    group: 'Civil & Architecture',
+                    name: 'Civil & Environmental Engineering',
+                    description: 'Civil engineering with environmental focus'
+                },
+                'MM': {
+                    group: 'Mechanical & Manufacturing',
+                    name: 'Mechanical Engineering (Smart Manufacturing)',
+                    description: 'Smart manufacturing systems and automation'
+                },
+                'LE': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Engineering (AI & ML)',
+                    description: 'AI/ML applications in computer science'
+                },
+                'LK': {
+                    group: 'Computer Science & IT',
+                    name: 'Computer Science & Engineering (IoT)',
+                    description: 'IoT applications in computer science'
+                }
+            };
+
+            // Function to get course info
+            function getCourseInfo(code) {
+                return courseInfo[code] || {
+                    group: 'Other Specializations',
+                    name: code,
+                    description: 'Specialized engineering branch'
+                };
+            }
+
+            $.ajax({
+                url: '/get_courses',
+                method: 'GET',
+                success: function(courses) {
+                    const $courseSelect = $('#course');
+                    $courseSelect.empty();
+                    $courseSelect.append('<option value="">All Branches</option>');
+
+                    // Group courses
+                    const groupedCourses = {};
+                    courses.forEach(courseCode => {
+                        const info = getCourseInfo(courseCode);
+                        if (!groupedCourses[info.group]) {
+                            groupedCourses[info.group] = [];
+                        }
+                        groupedCourses[info.group].push({
+                            code: courseCode,
+                            info: info
+                        });
+                    });
+
+                    // Sort groups
+                    const sortedGroups = Object.keys(groupedCourses).sort();
+                    sortedGroups.forEach(group => {
+                        const optgroup = $('<optgroup>', {
+                            label: group,
+                            class: 'course-group'
+                        });
+
+                        // Sort courses within group
+                        const sortedCourses = groupedCourses[group].sort((a, b) => {
+                            const nameA = String(a.info.name);
+                            const nameB = String(b.info.name);
+                            return nameA.localeCompare(nameB);
+                        });
+
+                        sortedCourses.forEach(course => {
+                            const option = $('<option>', {
+                                value: course.code,
+                                class: 'course-option',
+                                text: `${course.code} - ${course.info.name}`
+                            });
+                            
+                            // Add tooltip with description
+                            option.attr('title', course.info.description);
+                            optgroup.append(option);
+                        });
+
+                        $courseSelect.append(optgroup);
+                    });
+
+                    // Initialize tooltips
+                    $('[title]').tooltip();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching courses:', error);
+                    $('#error').removeClass('d-none')
+                        .text('Error loading engineering branches. Please refresh the page.');
+                }
+            });
+
+            $('#cutoffForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                if (currentRequest) {
+                    currentRequest.abort();
+                }
+
+                const formData = $(this).serializeArray();
+                const jsonData = {};
+                
+                // Validate year and round selection
+                const yearValue = $('#year').val();
+                const roundValue = $('#round').val();
+                
+                if (!yearValue || !roundValue) {
+                    $('#error').removeClass('d-none')
+                        .text('Please select both Year and Round');
+                    return;
+                }
+
+                formData.forEach(item => {
+                    if (item.name === 'include_nearby') {
+                        jsonData[item.name] = true;
+                    } else if (item.name === 'rank') {
+                        jsonData[item.name] = parseInt(item.value);
+                        
+                        // Validate rank
+                        if (isNaN(jsonData[item.name]) || jsonData[item.name] <= 0) {
+                            $('#error').removeClass('d-none')
+                                .text('Please enter a valid rank number');
+                            return;
+                        }
+                    } else {
+                        jsonData[item.name] = item.value;
+                    }
+                });
+
+                $('#result').addClass('d-none');
+                $('#error').addClass('d-none');
+                $('#cutoffTable').empty();
+
+                currentRequest = $.ajax({
+                    url: '/predict',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(jsonData),
+                    timeout: 30000,
+                    success: function(response) {
+                        if (response.message) {
+                            $('#error').removeClass('d-none').text(response.message);
+                            $('#result').addClass('d-none');
+                            return;
+                        }
+
+                        // Function to add colleges to table
+                        const addCollegesToTable = (colleges) => {
+                            // Clear existing content
+                            $('#cutoffTable').empty();
+                            $('.analysis-summary').remove();
+
+                            // Add new summary
+                            const summaryHtml = `
+                                <div class="alert alert-info mb-3 analysis-summary">
+                                    <h5 class="mb-2">Analysis Summary</h5>
+                                    <p class="mb-1">Found ${colleges.length} colleges matching your criteria for rank ${jsonData.rank}.</p>
+                                    <small class="text-muted">
+                                        ${jsonData.include_nearby ? 
+                                            'Results include colleges with ranks within ±10% of your rank and up to 50k ranks higher.' :
+                                            'Results show colleges with cutoff ranks higher than your rank.'}
+                                        <br>
+                                        <strong>Note:</strong> Colleges with cutoff ranks higher than your rank are marked as "Good Match".
+                                    </small>
+                                </div>
+                            `;
+                            $('#result').find('.table-responsive').before(summaryHtml);
+
+                            // Add all colleges to table
+                            colleges.forEach(college => {
+                                const rankDiff = college.rank_diff.toFixed(1);
+                                const rankDiffText = rankDiff > 0 ? 
+                                    `<span class="text-success">(+${rankDiff}% higher)</span>` : 
+                                    `<span class="text-danger">(${rankDiff}% lower)</span>`;
+
+                                const status = college.likely ? 
+                                    '<span class="status-badge likely">Good Match</span>' : 
+                                    '<span class="status-badge unlikely">Higher Rank Required</span>';
+
+                                $('#cutoffTable').append(`
+                                    <tr class="animate__animated animate__fadeIn">
+                                        <td>
+                                            <strong>${college.institute}</strong><br>
+                                            <small class="text-muted">${college.institute_code}</small>
+                                        </td>
+                                        <td>
+                                            <strong>${college.course}</strong><br>
+                                            <small class="text-muted">(${college.course_code})</small>
+                                        </td>
+                                        <td>${college.category}</td>
+                                        <td>
+                                            <strong>${college.cutoff_rank}</strong><br>
+                                            <small>${rankDiffText}</small>
+                                        </td>
+                                        <td>${college.round}</td>
+                                        <td>${college.year}</td>
+                                        <td>${status}</td>
+                                    </tr>
+                                `);
+                            });
+                        };
+
+                        if (Array.isArray(response) && response.length > 0) {
+                            const $resultDiv = $('#result');
+                            const $table = $('#cutoffTable');
+                            
+                            // Sort colleges by cutoff rank
+                            response.sort((a, b) => a.cutoff_rank - b.cutoff_rank);
+                            
+                            // Add all colleges to table
+                            addCollegesToTable(response);
+                            
+                            $resultDiv.removeClass('d-none');
+
+                            // Scroll to results
+                            $('html, body').animate({
+                                scrollTop: $resultDiv.offset().top - 20
+                            }, 500);
+                        } else {
+                            $('#error').removeClass('d-none')
+                                .text('No colleges found matching your criteria. Try adjusting your filters or including nearby ranks.');
+                            $('#result').addClass('d-none');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        let errorMessage = 'An error occurred while analyzing options. ';
+                        
+                        if (status === 'timeout') {
+                            errorMessage = 'The request timed out. Please try again.';
+                        } else if (status === 'abort') {
+                            errorMessage = 'The request was cancelled.';
+                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage += xhr.responseJSON.error;
+                        } else if (error) {
+                            errorMessage += error;
+                        }
+                        
+                        $('#result').addClass('d-none');
+                        $('#error').removeClass('d-none').text(errorMessage);
+                    },
+                    complete: function() {
+                        currentRequest = null;
+                    }
+                });
+            });
+
+            // Add smooth scrolling
+            $(document).on('click', 'a[href^="#"]', function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top
+                }, 500);
+            });
+
+            // Remove category tooltip initialization
+            $('#category').parent().find('label i.fa-info-circle').remove();
+
+            // Update table class for mobile responsiveness
+            $('#cutoffTable').closest('table').addClass('table-mobile');
+
+            // Add data-label attributes to table cells for mobile view
+            function updateTableForMobile() {
+                const table = document.getElementById('cutoffTable');
+                if (!table) return;
+                
+                const headers = Array.from(table.closest('table').querySelectorAll('thead th')).map(th => th.textContent);
+                
+                Array.from(table.querySelectorAll('tr')).forEach(row => {
+                    Array.from(row.querySelectorAll('td')).forEach((cell, index) => {
+                        cell.setAttribute('data-label', headers[index]);
+                    });
+                });
+            }
+
+            // Call updateTableForMobile whenever the table content changes
+            const observer = new MutationObserver(updateTableForMobile);
+            observer.observe(document.getElementById('cutoffTable'), { childList: true, subtree: true });
+        });
+    </script>
+</body>
+</html>
