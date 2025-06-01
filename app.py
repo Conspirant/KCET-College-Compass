@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, jsonify
 from collections import defaultdict
 import uuid
 import os
+import difflib
 
 # Setup logging with more detailed format
 logging.basicConfig(
@@ -17,6 +18,7 @@ app = Flask(__name__)
 
 # Load JSON data with detailed logging
 try:
+    logger.info("\n=== LOADING DATA ===")
     logger.info("Attempting to load kcet_cutoffs_master.json")
     with open('kcet_cutoffs_master.json', 'r', encoding='utf-8') as file:
         logger.debug("File opened successfully")
@@ -26,6 +28,47 @@ try:
         # Extract cutoff data and metadata
         cutoff_data = master_data['cutoffs']
         metadata = master_data['metadata']
+        
+        # Print first few entries to see the structure
+        logger.info("\n=== SAMPLE DATA ENTRIES ===")
+        for entry in cutoff_data[:3]:
+            logger.info(json.dumps(entry, indent=2))
+        
+        # Print unique values for each field
+        logger.info("\n=== UNIQUE VALUES IN DATA ===")
+        logger.info(f"Years: {sorted(set(entry['year'] for entry in cutoff_data))}")
+        logger.info(f"Categories: {sorted(set(entry['category'] for entry in cutoff_data))}")
+        logger.info(f"Rounds: {sorted(set(entry['round'] for entry in cutoff_data))}")
+        logger.info(f"Sample Courses: {sorted(set(entry['course'] for entry in cutoff_data))[:10]}")
+        logger.info("===========================\n")
+        
+        # Print counts
+        logger.info("\n=== DATA STATISTICS ===")
+        logger.info(f"Total entries: {len(cutoff_data)}")
+        logger.info(f"Unique years: {len(set(entry['year'] for entry in cutoff_data))}")
+        logger.info(f"Unique categories: {len(set(entry['category'] for entry in cutoff_data))}")
+        logger.info(f"Unique rounds: {len(set(entry['round'] for entry in cutoff_data))}")
+        logger.info(f"Unique courses: {len(set(entry['course'] for entry in cutoff_data))}")
+        logger.info("=======================\n")
+        
+        # Print available values
+        years = sorted(set(entry['year'] for entry in cutoff_data))
+        rounds = sorted(set(entry['round'] for entry in cutoff_data))
+        categories = sorted(set(entry['category'] for entry in cutoff_data))
+        courses = sorted(set(entry['course'] for entry in cutoff_data))
+        
+        logger.info("\n=== AVAILABLE DATA VALUES ===")
+        logger.info(f"Years available: {years}")
+        logger.info(f"Rounds available: {rounds}")
+        logger.info(f"Categories available: {categories}")
+        logger.info(f"Courses available: {courses}")
+        logger.info("===========================\n")
+        
+        # Print some sample entries
+        logger.info("\n=== SAMPLE ENTRIES ===")
+        for entry in cutoff_data[:3]:
+            logger.info(json.dumps(entry, indent=2))
+        logger.info("====================\n")
         
         # Convert to old format for compatibility
         data = {'kcet_cutoff': {}}
@@ -129,270 +172,441 @@ for year, rounds in round_name_map.items():
 
 # Update the course name mappings
 COURSE_FULL_NAMES = {
-    # Computer Science & IT Group
-    'CSE': 'Computer Science & Engineering',
-    'AI & ML': 'Artificial Intelligence & Machine Learning',
-    'ISE': 'Information Science & Engineering',
-    'DS': 'Data Science & Engineering',
-    'CY': 'Computer Science & Engineering (Cyber Security)',
-    'CA': 'Computer Science & Engineering (AI & ML)',
-    'CB': 'Computer Science & Business Systems',
-    'CD': 'Computer Science & Design Engineering',
-    'IC': 'Computer Science & Engineering (IoT & Cyber Security)',
-    'LE': 'Computer Science & Engineering (AI & ML)',
-    'LK': 'Computer Science & Engineering (IoT)',
-    'YA': 'Computer Science & Engineering (Robotics)',
-    'YB': 'Computer Science & Engineering (Data Analytics)',
-    'CU': 'Information Science & Engineering',
-    'LG': 'Computer Science & Engineering',
-    'LH': 'Information Science & Engineering',
-    'ZC': 'Computer Science & Engineering',
-    'CF': 'Computer Science & Engineering (AI)',
-    'BW': 'Computer Science & Engineering',
-    'ZO': 'Computer Science & Business Systems',
-    'CW': 'Information Technology Engineering',
-
-    # Electronics & Communication Group
-    'ECE': 'Electronics & Communication Engineering',
-    'EEE': 'Electrical & Electronics Engineering',
-    'EI': 'Electronics & Instrumentation Engineering',
-    'ET': 'Electronics & Telecommunication Engineering',
-    'EV': 'Electronics & Communication (VLSI Design)',
-    'ES': 'Electronics & Computer Engineering',
-    'TC': 'Telecommunication Engineering',
-    'MD': 'Medical Electronics Engineering',
-    'YC': 'Electronics & Communication (Embedded Systems & VLSI)',
-    'YG': 'Electronics & Communication (VLSI & Embedded)',
-    'BB': 'Electronics & Communication Engineering',
-    'YF': 'Electrical & Computer Engineering',
-
-    # Mechanical & Manufacturing Group
-    'MECH': 'Mechanical Engineering',
-    'MM': 'Mechanical Engineering (Smart Manufacturing)',
-    'AU': 'Automobile Engineering',
-    'AM': 'Additive Manufacturing Engineering',
-    'DB': 'Mechanical Engineering',
-    'YI': 'Mechanical Engineering',
-    'ZT': 'Mechanical Engineering (Smart Manufacturing)',
-
-    # Aerospace & Aviation Group
-    'AERO': 'Aerospace Engineering',
+    'AD': 'Artificial Intelligence And Data Science',
     'AE': 'Aeronautical Engineering',
-    'SE': 'Aerospace Engineering',
-    'ZA': 'Aeronautical Engineering',
-
-    # Civil & Architecture Group
-    'CIVIL': 'Civil Engineering',
-    'CE': 'Civil Engineering',
-    'CV': 'Civil & Environmental Engineering',
+    'AI': 'Artificial Intelligence and Machine Learning',
+    'AM': 'B TECH IN COMP SCI & ENGG (AI & ML)',
     'AR': 'Architecture',
-    'YE': 'Civil Engineering (Construction & Sustainability)',
-    'CK': 'Civil Engineering (Kannada Medium)',
-
-    # Biotechnology & Medical Group
-    'BT': 'Biotechnology Engineering',
-    'BR': 'Biomedical & Robotics Engineering',
-    'BO': 'Biotechnology Engineering',
-
-    # Chemical & Mining Group
-    'CHEM': 'Chemical Engineering',
+    'AT': 'Automotive Engineering',
+    'AU': 'Automobile Engineering',
+    'BA': 'B.Tech(Agri.Engg)',
+    'BB': 'B TECH IN ELECTRONICS & COMMUNICATION ENGINEERING',
+    'BC': 'BTech Computer Technology',
+    'BD': 'Computer Science Engineering-Big Data',
+    'BE': 'Bio-Electronics Engineering',
+    'BF': 'B TECH (HONS) COMP SCI AND ENGG(DATA SCIENCE)',
+    'BG': 'B TECH IN ARTIFICIAL INTELLI AND DATA SCIENCE',
+    'BH': 'B TECH IN ARTIFICIAL INTELLIGENCE AND ML',
+    'BI': 'Information Technology and Engineering',
+    'BJ': 'B TECH IN ELECTRICAL & ELECTRONICS ENGINEERING',
+    'BK': 'B TECH IN ENERGY ENGINEERING',
+    'BL': 'B TECH IN AERO SPACE ENGINEERING',
+    'BM': 'Bio Medical Engineering',
+    'BN': 'B TECH IN COMPUTER SCIENCE AND TECH(BIG DATA)',
+    'BO': 'B TECH IN BIO-TECHNOLOGY',
+    'BP': 'B TECH IN CIVIL ENGINEERING',
+    'BQ': 'B TECH IN COMPUTER SCIENCE AND TECHNOLOGY',
+    'BR': 'BioMedical and Robotic Engineering',
+    'BS': 'Bachelor of Science (Honours)',
+    'BT': 'Bio Technology',
+    'BU': 'B TECH IN COMPUTER SCIENCE AND INFO TECH',
+    'BV': 'B TECH IN COMPUTER ENGINEERING',
+    'BW': 'B TECH IN COMPUTER SCIENCE AND ENGINEERING',
+    'BX': 'B TECH IN COMP SCIENCE AND ENGG(CYBER SECURITY)',
+    'BY': 'B TECH IN COMP SCIENCE AND TECHNOLOGY(DEV OPS)',
+    'BZ': 'B TECH IN COMPUTER SCIENCE AND ENGG(DATA SCIENCE)',
+    'CA': 'Computer Science Engineering-AI, Machine Learning',
+    'CB': 'Computer Science and Business Systems',
+    'CC': 'Computer and Communication Engineering',
+    'CD': 'Computer Science and Design',
+    'CE': 'Civil Engineering',
+    'CF': 'B TECH IN COMPUTER SCIENCE AND ENGINEERING',
+    'CG': 'Computer Science and Technology',
     'CH': 'Chemical Engineering',
-    'MI': 'Mining Engineering',
-    'ZN': 'Pharmaceutical Engineering',
-
-    # Robotics & AI Group
-    'RA': 'Robotics & Automation Engineering',
-    'AI': 'Artificial Intelligence Engineering',
-    'AD': 'Artificial Intelligence & Data Science Engineering',
-    'RI': 'Robotics & Artificial Intelligence Engineering',
-    'DF': 'Robotics & Automation Engineering',
-    'DH': 'Robotics & AI Engineering',
-    'BG': 'Artificial Intelligence & Data Science Engineering',
-    'BZ': 'Data Science Engineering',
-    'DC': 'Data Science Engineering',
-    'BF': 'Data Science Engineering',
-    'DI': 'Robotics Engineering',
-
-    # Industrial & Management Group
-    'IM': 'Industrial Engineering & Management',
-    'OT': 'Industrial IoT Engineering',
-    'EB': 'Engineering Analysis & Technology',
-
-    # Other Specializations
-    'YH': 'Engineering Design',
-    'LJ': 'Biomedical Systems Engineering',
-    'ST': 'Silk Technology Engineering',
-    'TX': 'Textile Engineering'
+    'CI': 'Computer Science and Information Technology',
+    'CK': 'Civil Engineering (Kannada Medium)',
+    'CL': 'B TECH IN ELECTRONICS & COMPUTER ENGINEERING',
+    'CM': 'ELECTRONICS ENGINEERING(VLSI DESIGN & TECH)',
+    'CN': 'B TECH IN COMP SCI AND ENGG(IOT AND BLOCK CHAIN)',
+    'CO': 'Computer Engineering',
+    'CP': 'Civil Engineering and Planning',
+    'CQ': 'B TECH IN COMPUTER SCIENCE AND ENGINEERING(IOT)',
+    'CR': 'Ceramics and Cement Technology',
+    'CS': 'Computers Science And Engineering',
+    'CT': 'Construction Technology and Management',
+    'CU': 'B TECH IN INFORMATION SCIENCE ENGINEERING',
+    'CV': 'Civil Environmental Engineering',
+    'CW': 'B TECH IN INFORMATION TECHNOLOGY',
+    'CX': 'B TECH IN INFORMATION SCIENCE & TECHNOLOGY',
+    'CY': 'Computer Science Engineering-Cyber Security',
+    'CZ': 'B TECH IN COMPUTER SCIENCE AND ENGG(BLOCK CHAIN)',
+    'DA': 'B TECH IN MATHAMATICS AND COMPUTING',
+    'DB': 'B TECH IN MECHANICAL ENGINEERING',
+    'DC': 'Data Sciences',
+    'DD': 'B TECH IN MECHATRONICS ENGINEERING',
+    'DE': 'B TECH IN PETROLEUM ENGINEERING',
+    'DF': 'B TECH IN ROBOTICS AND AUTOMATION',
+    'DG': 'DESIGN',
+    'DH': 'B Tech in ROBOTICS AND ARTIFICIAL INTELLIGENCE',
+    'DI': 'B TECH IN ROBOTIC ENGINEERING',
+    'DJ': 'B TECH IN ROBOTICS',
+    'DK': 'B TECH IN COMPUTER SCIENCE AND SYSTEM ENGG',
+    'DL': 'B TECH IN COMPUTER SCIENCE',
+    'DM': 'COMPUTER SCIENCE ENGINEERING (NETWORKS)',
+    'DN': 'B Tech in VLSI',
+    'DS': 'Computer Science Engineering-Data Sciences',
+    'EA': 'Agriculture Engineering',
+    'EB': 'ELECTRONICS AND COMMUNICATION (ADV COMM TECH)',
+    'EC': 'Electronics and Communication Engineering',
+    'EE': 'Electrical And Electronics Engineering',
+    'EG': 'Energy Engineering',
+    'EI': 'Electronics and Instrumentation Engineering',
+    'EL': 'Electronics and Instrumentation Tech.',
+    'EN': 'Environmental Engineering',
+    'EP': 'BTech Technology and Entrepreneurship',
+    'ER': 'Electrical and Computer Engineering',
+    'ES': 'Electronics and Computer Engineering',
+    'ET': 'Electronics and Telecommunication Engineering',
+    'EV': 'Electronics Engineering(VLSI Design Technology)',
+    'IB': 'Computer Science Engg-IoT including Block Chain',
+    'IC': 'CS-Internet of things, Cyber Security(Block Chain)',
+    'IE': 'Information Science and Engineering',
+    'IG': 'Information Technology',
+    'II': 'Elec. and Communication- Industrial Integrated',
+    'IM': 'Industrial Engineering and Management',
+    'IO': 'Computer Science Engineering-Internet of Things',
+    'IP': 'Industrial and Production Engineering',
+    'IS': 'Information Science and Technology',
+    'IT': 'Instrumentation Technology',
+    'IY': 'CS - Information Technology-Cyber Security',
+    'LA': 'B Plan',
+    'LC': 'Computer Science Engineering-Block Chain',
+    'MC': 'Mathematics and Computing',
+    'MD': 'Medical Electronics',
+    'ME': 'Mechanical Engineering',
+    'MK': 'Mechanical Engineering (Kannada Medium)',
+    'MM': 'Mechanical and Smart Manufacturing',
+    'MR': 'Marine Engineering',
+    'MS': 'Manufacturing Science and Engineering',
+    'MT': 'Mechatronics',
+    'NT': 'Nano Technology',
+    'OP': 'Computer Science Engineering-Dev Ops',
+    'OT': 'Industrial IOT',
+    'PE': 'Petrochem Engineering',
+    'PL': 'Petroleum Engineering',
+    'PM': 'Precision Manufacturing',
+    'PT': 'Polymer Science and Technology',
+    'RA': 'Robotics and Automation',
+    'RB': 'Robotics',
+    'RI': 'Robotics and Artificial Intelligence',
+    'RM': 'Computer Science - Robotic Engineering-AI and ML',
+    'RO': 'Automation and Robotics Engineering',
+    'SA': 'Smart Agritech',
+    'SE': 'Aero Space Engineering',
+    'SS': 'Computer Science and System Engineering',
+    'ST': 'Silk Technology',
+    'TC': 'Telecommunication Engineering',
+    'TE': 'Tool Engineering',
+    'TI': 'Industrial IoT',
+    'TX': 'Textile Technology',
+    'UP': 'Planning',
+    'UR': 'Planning',
+    'ZC': 'COMPUTER SCIENCE',
+    'mn': 'Mining Engineering'
 }
 
 # Update course descriptions
 COURSE_DESCRIPTIONS = {
     # Computer Science & IT Group
-    'CSE': 'Core computer science focusing on software development, algorithms, and system design',
-    'AI & ML': 'Advanced artificial intelligence concepts, machine learning algorithms, and data analytics',
-    'ISE': 'Information systems, databases, and enterprise software development',
-    'DS': 'Data science, big data analytics, statistical modeling, and data visualization',
-    'CY': 'Network security, cryptography, and cyber defense systems',
-    'CA': 'AI/ML applications in computer science',
-    'CB': 'Computer science with business applications',
-    'CD': 'Computer science with design principles',
-    'IC': 'IoT systems and cybersecurity',
-    'LE': 'AI/ML applications in computer science',
-    'LK': 'IoT applications in computer science',
-    'YA': 'Robotics applications in computer science',
-    'YB': 'Data analytics and computer science',
+    'AD': 'AI and data science applications',
+    'AI': 'Advanced artificial intelligence and machine learning',
+    'AM': 'Computer science with AI and ML specialization',
+    'BD': 'Big data analytics and processing',
+    'BF': 'Honors program in data science',
+    'BG': 'AI and data science integration',
+    'BH': 'Advanced AI and ML technologies',
+    'BI': 'IT systems and engineering',
+    'BN': 'Big data technologies',
+    'BQ': 'Computer science fundamentals',
+    'BU': 'CS and IT integration',
+    'BV': 'Computer engineering fundamentals',
+    'BW': 'Standard CSE program',
+    'BX': 'Cyber security focus',
+    'BY': 'DevOps and deployment focus',
+    'BZ': 'Data science specialization',
+    'CA': 'AI and ML integration',
+    'CB': 'Business-focused CS',
+    'CC': 'Computer and communication systems',
+    'CD': 'Design-focused CS',
+    'CF': 'AI specialization',
+    'CG': 'Core computer science',
+    'CI': 'Information technology focus',
+    'CN': 'IoT and blockchain technologies',
+    'CO': 'Computer systems engineering',
+    'CQ': 'IoT specialization',
+    'CS': 'Core computer science',
+    'CU': 'Information science focus',
+    'CW': 'Information technology systems',
+    'CX': 'Information science and technology',
+    'CY': 'Cyber security specialization',
+    'CZ': 'Blockchain technology focus',
+    'DK': 'Systems engineering approach',
+    'DL': 'Core computer science',
+    'DM': 'Network specialization',
+    'DS': 'Data science focus',
+    'IB': 'IoT and blockchain integration',
+    'IC': 'IoT and cybersecurity',
+    'IE': 'Information systems',
+    'IG': 'Information technology',
+    'IO': 'Internet of Things focus',
+    'IS': 'Information systems',
+    'IY': 'Cybersecurity focus',
+    'LC': 'Blockchain specialization',
+    'OP': 'DevOps focus',
+    'SS': 'Systems engineering',
+    'ZC': 'Computer science core',
 
     # Electronics & Communication Group
-    'ECE': 'Digital electronics, communication systems, and signal processing',
-    'EEE': 'Power systems, control systems, and electrical machines',
-    'EI': 'Electronic instrumentation and control',
-    'ET': 'Telecommunications and electronic systems',
-    'EV': 'VLSI design and embedded systems',
-    'ES': 'Electronics and computer systems integration',
-    'TC': 'Telecommunication systems and networks',
-    'MD': 'Medical electronics and instrumentation',
-    'YC': 'Embedded systems and VLSI design',
+    'BB': 'Electronics and communication',
+    'BE': 'Bioelectronics systems',
+    'BJ': 'Electrical and electronics',
+    'CL': 'Electronics and computer integration',
+    'CM': 'VLSI design focus',
+    'DN': 'VLSI technology',
+    'EB': 'Advanced communication',
+    'EC': 'Core electronics and communication',
+    'EE': 'Electrical and electronic systems',
+    'EI': 'Electronics and instrumentation',
+    'EL': 'Instrumentation technology',
+    'ER': 'Electrical and computer systems',
+    'ES': 'Electronics and computer integration',
+    'ET': 'Telecommunication systems',
+    'EV': 'VLSI design specialization',
+    'II': 'Industrial electronics',
+    'IT': 'Instrumentation systems',
+    'MD': 'Medical electronics',
+    'TC': 'Telecommunication engineering',
 
     # Mechanical & Manufacturing Group
-    'MECH': 'Machine design, thermal engineering, and manufacturing processes',
-    'MM': 'Smart manufacturing systems and automation',
-    'AU': 'Automotive systems and design',
-    'AM': 'Advanced manufacturing and 3D printing',
-
-    # Aerospace & Aviation Group
-    'AERO': 'Aircraft design, aerodynamics, and aerospace systems',
-    'AE': 'Aircraft and aerospace systems engineering',
-    'SE': 'Space and aircraft engineering',
-    'ZA': 'Aeronautical and aviation engineering',
+    'AT': 'Automotive systems design',
+    'AU': 'Automobile engineering',
+    'DB': 'Mechanical engineering',
+    'ME': 'Core mechanical engineering',
+    'MK': 'Mechanical engineering (Kannada)',
+    'MM': 'Smart manufacturing systems',
+    'MS': 'Manufacturing processes',
+    'PM': 'Precision engineering',
+    'TE': 'Tool engineering',
 
     # Civil & Architecture Group
-    'CIVIL': 'Structural engineering, construction technology, and infrastructure design',
-    'CE': 'Civil infrastructure and construction engineering',
-    'CV': 'Civil engineering with environmental focus',
-    'AR': 'Architectural design and planning',
-    'YE': 'Sustainable civil engineering',
+    'AR': 'Architectural design',
+    'BP': 'Civil engineering',
+    'CE': 'Core civil engineering',
+    'CK': 'Civil engineering (Kannada)',
+    'CP': 'Civil planning',
+    'CT': 'Construction technology',
+    'CV': 'Environmental focus',
+    'LA': 'Planning and design',
+    'UP': 'Urban planning',
+    'UR': 'Rural planning',
 
-    # Biotechnology & Medical Group
-    'BT': 'Genetic engineering, biochemistry, and bioprocess technology',
-    'BR': 'Biomedical instrumentation and robotics',
-    'BO': 'Biotechnology and bioprocessing',
+    # Chemical & Biotechnology Group
+    'BM': 'Biomedical systems',
+    'BO': 'Biotechnology',
+    'BR': 'Biomedical robotics',
+    'BT': 'Biotechnology',
+    'CH': 'Chemical processes',
+    'CR': 'Ceramics technology',
+    'PE': 'Petrochemical engineering',
+    'PL': 'Petroleum engineering',
+    'PT': 'Polymer technology',
 
-    # Chemical & Mining Group
-    'CHEM': 'Chemical processes, reactor design, and industrial chemistry',
-    'CH': 'Chemical process engineering',
-    'MI': 'Mining technology and operations',
-    'ZN': 'Pharmaceutical process engineering',
+    # Aerospace & Aviation Group
+    'AE': 'Aeronautical systems',
+    'BL': 'Aerospace engineering',
+    'MR': 'Marine systems',
+    'SE': 'Space engineering',
 
-    # Robotics & AI Group
-    'RA': 'Robot design, control systems, and industrial automation',
-    'AI': 'Artificial intelligence systems and applications',
-    'AD': 'AI and data science applications',
-    'RI': 'Robotics with AI applications',
-    'DF': 'Advanced robotics and automation',
+    # Robotics & Automation Group
+    'DF': 'Robotics and automation',
+    'DH': 'AI-powered robotics',
+    'DI': 'Robotic systems',
+    'DJ': 'Robotics engineering',
+    'RA': 'Automation systems',
+    'RB': 'Core robotics',
+    'RI': 'AI and robotics',
+    'RM': 'Robotics with AI/ML',
+    'RO': 'Industrial automation',
 
-    # Industrial & Management Group
-    'IM': 'Industrial processes and management',
-    'OT': 'Industrial Internet of Things',
-    'EB': 'Engineering analysis and technology'
+    # Other Specialized Programs
+    'BA': 'Agricultural engineering',
+    'BC': 'Computer technology',
+    'BK': 'Energy systems',
+    'BS': 'Science honors',
+    'DA': 'Mathematical computing',
+    'DC': 'Data sciences',
+    'DD': 'Mechatronics systems',
+    'DE': 'Petroleum engineering',
+    'DG': 'Design engineering',
+    'EA': 'Agricultural systems',
+    'EG': 'Energy engineering',
+    'EN': 'Environmental systems',
+    'EP': 'Technology entrepreneurship',
+    'IM': 'Industrial management',
+    'IP': 'Production engineering',
+    'MC': 'Mathematical computing',
+    'MT': 'Mechatronics systems',
+    'NT': 'Nanotechnology',
+    'OT': 'Industrial IoT',
+    'SA': 'Smart agriculture',
+    'ST': 'Silk technology',
+    'TI': 'Industrial IoT systems',
+    'TX': 'Textile engineering',
+    'mn': 'Mining engineering'
 }
 
 # Update course groupings
 COURSE_GROUPS = {
     # Computer Science & IT
-    'CSE': 'Computer Science & IT',
-    'AI & ML': 'Computer Science & IT',
-    'ISE': 'Computer Science & IT',
-    'DS': 'Computer Science & IT',
-    'CY': 'Computer Science & IT',
+    'AD': 'Computer Science & IT',
+    'AI': 'Computer Science & IT',
+    'AM': 'Computer Science & IT',
+    'BD': 'Computer Science & IT',
+    'BF': 'Computer Science & IT',
+    'BG': 'Computer Science & IT',
+    'BH': 'Computer Science & IT',
+    'BI': 'Computer Science & IT',
+    'BN': 'Computer Science & IT',
+    'BQ': 'Computer Science & IT',
+    'BU': 'Computer Science & IT',
+    'BV': 'Computer Science & IT',
+    'BW': 'Computer Science & IT',
+    'BX': 'Computer Science & IT',
+    'BY': 'Computer Science & IT',
+    'BZ': 'Computer Science & IT',
     'CA': 'Computer Science & IT',
     'CB': 'Computer Science & IT',
+    'CC': 'Computer Science & IT',
     'CD': 'Computer Science & IT',
-    'IC': 'Computer Science & IT',
-    'LE': 'Computer Science & IT',
-    'LK': 'Computer Science & IT',
-    'YA': 'Computer Science & IT',
-    'YB': 'Computer Science & IT',
-    'CU': 'Computer Science & IT',
-    'LG': 'Computer Science & IT',
-    'LH': 'Computer Science & IT',
-    'ZC': 'Computer Science & IT',
     'CF': 'Computer Science & IT',
-    'BW': 'Computer Science & IT',
-    'ZO': 'Computer Science & IT',
+    'CG': 'Computer Science & IT',
+    'CI': 'Computer Science & IT',
+    'CN': 'Computer Science & IT',
+    'CO': 'Computer Science & IT',
+    'CQ': 'Computer Science & IT',
+    'CS': 'Computer Science & IT',
+    'CU': 'Computer Science & IT',
     'CW': 'Computer Science & IT',
+    'CX': 'Computer Science & IT',
+    'CY': 'Computer Science & IT',
+    'CZ': 'Computer Science & IT',
+    'DK': 'Computer Science & IT',
+    'DL': 'Computer Science & IT',
+    'DM': 'Computer Science & IT',
+    'DS': 'Computer Science & IT',
+    'IB': 'Computer Science & IT',
+    'IC': 'Computer Science & IT',
+    'IE': 'Computer Science & IT',
+    'IG': 'Computer Science & IT',
+    'IO': 'Computer Science & IT',
+    'IS': 'Computer Science & IT',
+    'IY': 'Computer Science & IT',
+    'LC': 'Computer Science & IT',
+    'OP': 'Computer Science & IT',
+    'SS': 'Computer Science & IT',
+    'ZC': 'Computer Science & IT',
 
     # Electronics & Communication
-    'ECE': 'Electronics & Communication',
-    'EEE': 'Electronics & Communication',
+    'BB': 'Electronics & Communication',
+    'BE': 'Electronics & Communication',
+    'BJ': 'Electronics & Communication',
+    'CL': 'Electronics & Communication',
+    'CM': 'Electronics & Communication',
+    'DN': 'Electronics & Communication',
+    'EB': 'Electronics & Communication',
+    'EC': 'Electronics & Communication',
+    'EE': 'Electronics & Communication',
     'EI': 'Electronics & Communication',
+    'EL': 'Electronics & Communication',
+    'ER': 'Electronics & Communication',
+    'ES': 'Electronics & Communication',
     'ET': 'Electronics & Communication',
     'EV': 'Electronics & Communication',
-    'ES': 'Electronics & Communication',
-    'TC': 'Electronics & Communication',
+    'II': 'Electronics & Communication',
+    'IT': 'Electronics & Communication',
     'MD': 'Electronics & Communication',
-    'YC': 'Electronics & Communication',
-    'YG': 'Electronics & Communication',
-    'BB': 'Electronics & Communication',
-    'YF': 'Electronics & Communication',
+    'TC': 'Electronics & Communication',
 
     # Mechanical & Manufacturing
-    'MECH': 'Mechanical & Manufacturing',
-    'MM': 'Mechanical & Manufacturing',
+    'AT': 'Mechanical & Manufacturing',
     'AU': 'Mechanical & Manufacturing',
-    'AM': 'Mechanical & Manufacturing',
     'DB': 'Mechanical & Manufacturing',
-    'YI': 'Mechanical & Manufacturing',
-    'ZT': 'Mechanical & Manufacturing',
-
-    # Aerospace & Aviation
-    'AERO': 'Aerospace & Aviation',
-    'AE': 'Aerospace & Aviation',
-    'SE': 'Aerospace & Aviation',
-    'ZA': 'Aerospace & Aviation',
+    'ME': 'Mechanical & Manufacturing',
+    'MK': 'Mechanical & Manufacturing',
+    'MM': 'Mechanical & Manufacturing',
+    'MS': 'Mechanical & Manufacturing',
+    'PM': 'Mechanical & Manufacturing',
+    'TE': 'Mechanical & Manufacturing',
 
     # Civil & Architecture
-    'CIVIL': 'Civil & Architecture',
-    'CE': 'Civil & Architecture',
-    'CV': 'Civil & Architecture',
     'AR': 'Civil & Architecture',
-    'YE': 'Civil & Architecture',
+    'BP': 'Civil & Architecture',
+    'CE': 'Civil & Architecture',
     'CK': 'Civil & Architecture',
+    'CP': 'Civil & Architecture',
+    'CT': 'Civil & Architecture',
+    'CV': 'Civil & Architecture',
+    'LA': 'Civil & Architecture',
+    'UP': 'Civil & Architecture',
+    'UR': 'Civil & Architecture',
 
-    # Biotechnology & Medical
-    'BT': 'Biotechnology & Medical',
-    'BR': 'Biotechnology & Medical',
-    'BO': 'Biotechnology & Medical',
-    'LJ': 'Biotechnology & Medical',
+    # Chemical & Biotechnology
+    'BM': 'Chemical & Biotechnology',
+    'BO': 'Chemical & Biotechnology',
+    'BR': 'Chemical & Biotechnology',
+    'BT': 'Chemical & Biotechnology',
+    'CH': 'Chemical & Biotechnology',
+    'CR': 'Chemical & Biotechnology',
+    'PE': 'Chemical & Biotechnology',
+    'PL': 'Chemical & Biotechnology',
+    'PT': 'Chemical & Biotechnology',
 
-    # Chemical & Mining
-    'CHEM': 'Chemical & Mining',
-    'CH': 'Chemical & Mining',
-    'MI': 'Chemical & Mining',
-    'ZN': 'Chemical & Mining',
+    # Aerospace & Aviation
+    'AE': 'Aerospace & Aviation',
+    'BL': 'Aerospace & Aviation',
+    'MR': 'Aerospace & Aviation',
+    'SE': 'Aerospace & Aviation',
 
-    # Robotics & AI
-    'RA': 'Robotics & AI',
-    'AI': 'Robotics & AI',
-    'AD': 'Robotics & AI',
-    'RI': 'Robotics & AI',
-    'DF': 'Robotics & AI',
-    'DH': 'Robotics & AI',
-    'BG': 'Robotics & AI',
-    'BZ': 'Robotics & AI',
-    'DC': 'Robotics & AI',
-    'BF': 'Robotics & AI',
-    'DI': 'Robotics & AI',
+    # Robotics & Automation
+    'DF': 'Robotics & Automation',
+    'DH': 'Robotics & Automation',
+    'DI': 'Robotics & Automation',
+    'DJ': 'Robotics & Automation',
+    'RA': 'Robotics & Automation',
+    'RB': 'Robotics & Automation',
+    'RI': 'Robotics & Automation',
+    'RM': 'Robotics & Automation',
+    'RO': 'Robotics & Automation',
 
-    # Industrial & Management
-    'IM': 'Industrial & Management',
-    'OT': 'Industrial & Management',
-    'EB': 'Industrial & Management',
-
-    # Other Specializations
-    'YH': 'Other Specializations',
-    'ST': 'Other Specializations',
-    'TX': 'Other Specializations'
+    # Other Specialized Programs
+    'BA': 'Other Specialized Programs',
+    'BC': 'Other Specialized Programs',
+    'BK': 'Other Specialized Programs',
+    'BS': 'Other Specialized Programs',
+    'DA': 'Other Specialized Programs',
+    'DC': 'Other Specialized Programs',
+    'DD': 'Other Specialized Programs',
+    'DE': 'Other Specialized Programs',
+    'DG': 'Other Specialized Programs',
+    'EA': 'Other Specialized Programs',
+    'EG': 'Other Specialized Programs',
+    'EN': 'Other Specialized Programs',
+    'EP': 'Other Specialized Programs',
+    'IM': 'Other Specialized Programs',
+    'IP': 'Other Specialized Programs',
+    'MC': 'Other Specialized Programs',
+    'MT': 'Other Specialized Programs',
+    'NT': 'Other Specialized Programs',
+    'OT': 'Other Specialized Programs',
+    'SA': 'Other Specialized Programs',
+    'ST': 'Other Specialized Programs',
+    'TI': 'Other Specialized Programs',
+    'TX': 'Other Specialized Programs',
+    'mn': 'Other Specialized Programs'
 }
+
+# Create reverse mapping for course names to codes
+COURSE_CODES = {full_name: code for code, full_name in COURSE_FULL_NAMES.items()}
 
 @app.route('/')
 def index():
@@ -409,10 +623,30 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        logger.debug("Received POST request to /predict")
-        user_input = request.get_json()
-        logger.debug(f"Received input data: {user_input}")
+        logger.info("\n=== NEW PREDICTION REQUEST ===")
         
+        # Log raw request data
+        logger.info("Raw request data:")
+        logger.info(f"Content-Type: {request.content_type}")
+        logger.info(f"Raw data: {request.get_data(as_text=True)}")
+        
+        try:
+            user_input = request.get_json()
+            logger.info(f"Parsed JSON input: {json.dumps(user_input, indent=2)}")
+        except Exception as e:
+            logger.error(f"Failed to parse JSON: {str(e)}")
+            return jsonify({
+                'error': 'Invalid JSON data',
+                'details': str(e)
+            }), 400
+        
+        if not user_input:
+            logger.error("Empty request body")
+            return jsonify({
+                'error': 'Empty request body',
+                'help': 'Request must include rank, category, and round_name'
+            }), 400
+            
         # Validate required fields
         required_fields = ['rank', 'category', 'round_name']
         missing_fields = [field for field in required_fields if field not in user_input or user_input[field] is None]
@@ -420,137 +654,259 @@ def predict():
         if missing_fields:
             error_msg = f"Missing required fields: {', '.join(missing_fields)}"
             logger.error(error_msg)
-            return jsonify({'error': error_msg}), 400
+            return jsonify({
+                'error': error_msg,
+                'required_fields': required_fields,
+                'received_fields': list(user_input.keys())
+            }), 400
             
-        rank = int(user_input.get('rank'))
-        category = user_input.get('category')
-        course = user_input.get('course', '')
+        # Log the values we received
+        logger.info("Received values:")
+        logger.info(f"rank: {user_input.get('rank')}")
+        logger.info(f"category: {user_input.get('category')}")
+        logger.info(f"round_name: {user_input.get('round_name')}")
+        logger.info(f"course: {user_input.get('course', '')}")
+        
+        try:
+            rank = int(user_input.get('rank'))
+        except ValueError:
+            return jsonify({
+                'error': 'Invalid rank value',
+                'received': user_input.get('rank'),
+                'help': 'Rank must be a valid number'
+            }), 400
+            
+        category_input = user_input.get('category', '')
+        course_input = user_input.get('course', '')
         round_name = user_input.get('round_name')
         include_nearby = user_input.get('include_nearby', False)
         selected_institute = user_input.get('institute', '')
 
-        logger.debug(f"Processing request: Rank={rank}, Category={category}, Course='{course}', Round='{round_name}'")
+        # Log available values for comparison
+        logger.info("\n=== Available Values in Database ===")
+        logger.info(f"Categories: {sorted(set(entry['category'] for entry in cutoff_data))}")
+        logger.info(f"Rounds: {sorted(set(entry['round'] for entry in cutoff_data))}")
+        if course_input:
+            logger.info(f"Courses: {sorted(set(entry['course'] for entry in cutoff_data))}")
+        logger.info("================================")
 
-        # Extract year from round_name
-        year = round_name.split()[0]
+        # Forgiving matching for category
+        def best_match(val, options):
+            matches = difflib.get_close_matches(val, options, n=1, cutoff=0.6)
+            return matches[0] if matches else None
+        
+        # Normalize all available values for matching
+        norm = lambda s: s.strip().lower().replace(' ', '').replace('&', 'and') if isinstance(s, str) else s
+        norm_categories = {norm(cat): cat for cat in sorted(set(entry['category'] for entry in cutoff_data))}
+        norm_courses = {norm(c): c for c in sorted(set(entry['course'] for entry in cutoff_data))}
+        norm_rounds = {norm(r): r for r in sorted(set(entry['round'] for entry in cutoff_data))}
+        
+        # Match category
+        category_norm = norm(category_input)
+        category = norm_categories.get(category_norm) or best_match(category_norm, list(norm_categories.keys()))
+        if category:
+            category = norm_categories.get(category, category)
+        else:
+            return jsonify({'error': f"Category '{category_input}' not found.", 'suggestions': sorted(norm_categories.keys())}), 400
+        
+        # Match course
+        course_norm = norm(course_input)
+        course = norm_courses.get(course_norm) or best_match(course_norm, list(norm_courses.keys()))
+        if course:
+            course = norm_courses.get(course, course)
+        else:
+            return jsonify({'error': f"Course '{course_input}' not found.", 'suggestions': sorted(norm_courses.keys())}), 400
+        
+        # Extract year and round information
+        try:
+            if ' ' not in round_name:
+                if not sorted(set(entry['year'] for entry in cutoff_data)):
+                    return jsonify({'error': 'No year data available'}), 400
+                year_from_input_round_name = sorted(set(entry['year'] for entry in cutoff_data))[-1]  # Latest year
+                specific_round_text_from_input = round_name
+            else:
+                parts = round_name.split(' ', 1)
+                year_from_input_round_name = parts[0]
+                specific_round_text_from_input = parts[1]
+            is_all_rounds_selected_for_year = 'all rounds' in round_name.lower()
+            input_round_norm = norm(specific_round_text_from_input)
+            round_match = norm_rounds.get(input_round_norm) or best_match(input_round_norm, list(norm_rounds.keys()))
+            if round_match:
+                round_match = norm_rounds.get(round_match, round_match)
+            else:
+                return jsonify({'error': f"Round '{specific_round_text_from_input}' not found.", 'suggestions': sorted(norm_rounds.keys())}), 400
+        except Exception as e:
+            logger.error(f"Error parsing round name '{round_name}': {str(e)}")
+            return jsonify({'error': f"Invalid round format: {round_name}"}), 400
         
         # Calculate rank range based on include_nearby flag
-        rank_margin = 0.10 if include_nearby else 0  # 10% margin if include_nearby is True, 0% otherwise
+        rank_margin = 0.15 if include_nearby else 0  # Changed from 0.10 to 0.15 for ±15%
         min_rank = int(rank * (1 - rank_margin))
         max_rank = int(rank * (1 + rank_margin))
         
-        # Filter cutoffs based on criteria
-        matching_colleges = []
-        seen_combinations = set()  # To prevent duplicates
-        
+        # Pre-filter the data based on year and category
+        filtered_data = []
         for entry in cutoff_data:
-            # Skip if year doesn't match (unless "All Rounds" is selected)
-            if not round_name.endswith('All Rounds') and entry['year'] != year:
+            if entry['year'] != year_from_input_round_name:
                 continue
-                
-            # Skip if category doesn't match
             if entry['category'] != category:
                 continue
-                
-            # Skip if course doesn't match (when a course is selected)
             if course and entry['course'] != course:
                 continue
-                
-            # Skip if institute doesn't match (when an institute is selected)
             if selected_institute and f"{entry['institute_code']}_{entry['institute']}" != selected_institute:
                 continue
-
-            # Include colleges based on rank criteria
-            if include_nearby:
-                # If nearby ranks included, use the calculated range
-                if not (min_rank <= entry['cutoff_rank'] <= max_rank + 50000):
-                    continue
-            else:
-                # If nearby ranks not included, only show colleges with cutoff higher than user's rank
-                if entry['cutoff_rank'] < rank:
-                    continue
-
-            # Create a unique key for this combination to prevent duplicates
-            # Include all relevant fields to ensure uniqueness
-            combo_key = (
-                f"{entry['institute_code']}_"
-                f"{entry['course']}_"
-                f"{entry['category']}_"
-                f"{entry['cutoff_rank']}_"
-                f"{entry['year']}_"
-                f"{entry['round']}"
-            )
-            
-            # Skip if we've already seen this exact combination
-            if combo_key in seen_combinations:
+            if not is_all_rounds_selected_for_year and norm(entry['round']) != input_round_norm:
                 continue
-            seen_combinations.add(combo_key)
+            filtered_data.append(entry)
+        if not filtered_data:
+            return jsonify({'error': 'No colleges found matching your criteria.', 'debug': {
+                'year': year_from_input_round_name,
+                'category': category,
+                'course': course,
+                'round': round_match,
+                'available_years': sorted(set(e['year'] for e in cutoff_data)),
+                'available_categories': sorted(set(e['category'] for e in cutoff_data)),
+                'available_courses': sorted(set(e['course'] for e in cutoff_data)),
+                'available_rounds': sorted(set(e['round'] for e in cutoff_data))
+            }}), 404
+        
+        # Filter cutoffs based on remaining criteria
+        matching_colleges = []
+        seen_combinations = set()
+        
+        for entry in filtered_data:
+            try:
+                # Handle round filtering if specific round is selected
+                if not is_all_rounds_selected_for_year:
+                    entry_round_normalized = ' '.join(entry['round'].lower().split())
+                    if entry_round_normalized != input_round_norm:
+                        continue
+
+                # Handle rank criteria with more lenient matching
+                if include_nearby:
+                    # Allow ranks within ±15% range and up to 75000 ranks higher
+                    if not (min_rank <= entry['cutoff_rank'] <= max_rank + 75000):
+                        continue
+                else:
+                    # For non-nearby matches, still allow some flexibility
+                    if entry['cutoff_rank'] < rank - 1000:  # Allow slightly lower ranks
+                        continue
+
+                # Create a unique key for this combination
+                combo_key = f"{entry['institute_code']}_{entry['course']}_{entry['category']}_{entry['cutoff_rank']}_{entry['year']}_{entry['round']}"
                 
-            # Calculate rank difference percentage
-            rank_diff_percent = ((entry['cutoff_rank'] - rank) / rank) * 100
-            
-            # All colleges with higher cutoff rank are considered "good match"
-            is_likely = entry['cutoff_rank'] >= rank
-            
-            # Get full course name
-            course_code = entry['course']
-            course_full_name = COURSE_FULL_NAMES.get(course_code, course_code)
-            
-            # Format round name to include year if "All Rounds" is selected
-            display_round = f"{entry['year']} {entry['round']}" if round_name.endswith('All Rounds') else entry['round']
-            
-            matching_colleges.append({
-                'institute': entry['institute'],
-                'institute_code': entry['institute_code'],
-                'cutoff_rank': entry['cutoff_rank'],
-                'course': course_full_name,
-                'course_code': course_code,
-                'category': entry['category'],
-                'round': display_round,
-                'year': entry['year'],
-                'likely': is_likely,
-                'rank_diff': rank_diff_percent
-            })
+                if combo_key in seen_combinations:
+                    continue
+                seen_combinations.add(combo_key)
+                
+                # Calculate rank difference percentage
+                rank_diff_percent = ((entry['cutoff_rank'] - rank) / rank) * 100
+                
+                # Get full course name (use dict.get with default to avoid extra lookups)
+                course_full_name = COURSE_FULL_NAMES.get(entry['course'], entry['course'])
+                
+                matching_colleges.append({
+                    'institute': entry['institute'],
+                    'institute_code': entry['institute_code'],
+                    'cutoff_rank': entry['cutoff_rank'],
+                    'course': course_full_name,
+                    'course_code': entry['course'],
+                    'category': entry['category'],
+                    'round': entry['round'],
+                    'year': entry['year'],
+                    'likely': entry['cutoff_rank'] >= rank,
+                    'rank_diff': rank_diff_percent
+                })
+                
+            except Exception as e:
+                logger.error(f"Error processing entry: {str(e)}")
+                continue
         
         if not matching_colleges:
-            return jsonify({'message': 'No colleges found matching your criteria. Try adjusting your filters or including nearby ranks.'})
+            return jsonify({
+                'message': 'No colleges found matching your criteria. Try adjusting your filters or including nearby ranks.',
+                'criteria': {
+                    'year': year_from_input_round_name,
+                    'round': round_match,
+                    'is_all_rounds': is_all_rounds_selected_for_year,
+                    'category': category,
+                    'course': course,
+                    'institute': selected_institute,
+                    'rank_range': f"{min_rank} to {max_rank + 75000 if include_nearby else rank - 1000}"
+                },
+                'available_values': {
+                    'years': sorted(set(e['year'] for e in cutoff_data)),
+                    'categories': sorted(set(e['category'] for e in cutoff_data)),
+                    'rounds': sorted(set(e['round'] for e in cutoff_data))
+                }
+            })
         
-        # Sort by cutoff rank (ascending) and likelihood
+        # Sort by cutoff rank and likelihood
         matching_colleges.sort(key=lambda x: (not x['likely'], x['cutoff_rank']))
         
-        # Log some debugging information
-        logger.debug(f"Found {len(matching_colleges)} matching colleges after filtering")
-        logger.debug(f"First few matches: {matching_colleges[:3]}")
-        
         return jsonify(matching_colleges)
-
     except Exception as e:
-        logger.error(f"Error in predict route: {str(e)}", exc_info=True)
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Unexpected error in predict route: {str(e)}", exc_info=True)
+        return jsonify({'error': f"An unexpected error occurred: {str(e)}"}), 500
 
 @app.route('/get_courses')
 def get_courses():
-    """Returns a list of all available courses that exist in the data."""
-    available_courses = set()
-    
+    """Returns a list of all available courses."""
     try:
-        if 'metadata' in data and 'cutoffs' in data:
-            # New JSON format
-            for entry in cutoff_data:
-                if entry['course']:
-                    available_courses.add(entry['course'])
-        else:
-            # Old JSON format - iterate through the nested structure
-            for year_data in data['kcet_cutoff'].values():
-                for round_data in year_data.values():
-                    for college in round_data.values():
-                        if 'courses' in college:
-                            available_courses.update(college['courses'].keys())
-        
-        # Convert to list and sort
-        course_list = sorted(list(available_courses))
-        logger.debug(f"Found {len(course_list)} available courses")
-        return jsonify(course_list)
+        # Define course groups
+        GROUPS = {
+            'CS_IT': 'Computer Science & IT',
+            'ECE': 'Electronics & Communication',
+            'MECH': 'Mechanical & Manufacturing',
+            'CIVIL': 'Civil & Architecture',
+            'CHEM_BIO': 'Chemical & Biotechnology',
+            'AERO': 'Aerospace & Aviation',
+            'ROBOTICS': 'Robotics & Automation',
+            'OTHERS': 'Other Specialized Programs'
+        }
+
+        # Define courses with their groups
+        courses = [
+            # Computer Science & IT
+            {'code': 'CS', 'name': 'Computer Science And Engineering', 'group': GROUPS['CS_IT']},
+            {'code': 'IS', 'name': 'Information Science and Technology', 'group': GROUPS['CS_IT']},
+            {'code': 'AI', 'name': 'Artificial Intelligence and Machine Learning', 'group': GROUPS['CS_IT']},
+            {'code': 'DS', 'name': 'Data Science', 'group': GROUPS['CS_IT']},
+
+            # Electronics & Communication
+            {'code': 'EC', 'name': 'Electronics and Communication Engineering', 'group': GROUPS['ECE']},
+            {'code': 'EE', 'name': 'Electrical and Electronics Engineering', 'group': GROUPS['ECE']},
+
+            # Mechanical & Manufacturing
+            {'code': 'ME', 'name': 'Mechanical Engineering', 'group': GROUPS['MECH']},
+            {'code': 'AU', 'name': 'Automobile Engineering', 'group': GROUPS['MECH']},
+
+            # Civil & Architecture
+            {'code': 'CE', 'name': 'Civil Engineering', 'group': GROUPS['CIVIL']},
+            {'code': 'AR', 'name': 'Architecture', 'group': GROUPS['CIVIL']},
+
+            # Chemical & Biotechnology
+            {'code': 'CH', 'name': 'Chemical Engineering', 'group': GROUPS['CHEM_BIO']},
+            {'code': 'BT', 'name': 'Biotechnology', 'group': GROUPS['CHEM_BIO']},
+
+            # Aerospace & Aviation
+            {'code': 'AE', 'name': 'Aeronautical Engineering', 'group': GROUPS['AERO']},
+            {'code': 'SE', 'name': 'Aerospace Engineering', 'group': GROUPS['AERO']},
+
+            # Robotics & Automation
+            {'code': 'RO', 'name': 'Robotics and Automation', 'group': GROUPS['ROBOTICS']},
+            {'code': 'RI', 'name': 'Robotics and AI', 'group': GROUPS['ROBOTICS']},
+
+            # Other Programs
+            {'code': 'MT', 'name': 'Mechatronics', 'group': GROUPS['OTHERS']},
+            {'code': 'NT', 'name': 'Nanotechnology', 'group': GROUPS['OTHERS']}
+        ]
+
+        # Add descriptions
+        for course in courses:
+            course['description'] = course['name']
+
+        return jsonify(courses)
         
     except Exception as e:
         logger.error(f"Error in get_courses route: {str(e)}", exc_info=True)
