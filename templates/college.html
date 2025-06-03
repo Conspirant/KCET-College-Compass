@@ -880,418 +880,116 @@
             }
         }
 
-        /* Enhanced Select2 Styling to match default dropdowns */
+        /* Enhanced Select2 Styling */
         .select2-container {
             width: 100% !important;
             margin-bottom: 0 !important;
         }
 
-        .select2-container--default .select2-selection--single,
-        .select2-container--default .select2-selection--multiple {
-            border: 2px solid #e0e0e0 !important;
-            border-radius: 12px !important;
+        /* Priority Colleges Dropdown Styles */
+        #priority_colleges + .select2-container .select2-selection--multiple {
             min-height: 45px !important;
-            background-color: #fff !important;
-            transition: all 0.3s ease !important;
+            padding: 4px !important;
         }
 
-        .select2-container--default.select2-container--focus .select2-selection--single,
-        .select2-container--default.select2-container--focus .select2-selection--multiple,
-        .select2-container--default.select2-container--open .select2-selection--single,
-        .select2-container--default.select2-container--open .select2-selection--multiple {
-            border-color: #3498db !important;
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25) !important;
-        }
-
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #3498db !important;
+        #priority_colleges + .select2-container .select2-selection__choice {
+            background: linear-gradient(135deg, #ffd700, #ffc107) !important;
             border: none !important;
-            color: white !important;
+            color: #000 !important;
             border-radius: 20px !important;
-            padding: 5px 10px !important;
+            padding: 5px 12px !important;
             margin: 4px !important;
+            font-size: 0.9rem !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
 
-        .select2-container--default .select2-selection__choice__remove {
-            color: white !important;
+        #priority_colleges + .select2-container .select2-selection__choice__remove {
+            color: #000 !important;
             margin-right: 5px !important;
             border: none !important;
             background: none !important;
             padding: 0 5px !important;
+            order: 2 !important;
         }
 
-        .select2-container--default .select2-selection__choice__remove:hover {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
+        #priority_colleges + .select2-container .select2-selection__choice__remove:hover {
+            background-color: rgba(0, 0, 0, 0.1) !important;
+            color: #000 !important;
+            border-radius: 50% !important;
         }
 
-        .select2-dropdown {
-            border: 2px solid #e0e0e0 !important;
-            border-radius: 12px !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        #priority_colleges + .select2-container .select2-search__field {
             margin-top: 4px !important;
-        }
-
-        .select2-search__field {
-            border-radius: 8px !important;
-            padding: 8px !important;
-        }
-
-        .select2-container--default .select2-search--dropdown .select2-search__field {
-            border: 2px solid #e0e0e0 !important;
-        }
-
-        .select2-results__option {
-            padding: 10px 12px !important;
-            transition: all 0.2s ease !important;
         }
 
         .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: #3498db !important;
+            background-color: #ffc107 !important;
+            color: #000 !important;
         }
 
         .select2-container--default .select2-results__group {
-            padding: 10px !important;
-            font-weight: 600 !important;
-            background: #f8f9fa !important;
-            color: #2c3e50 !important;
-        }
-
-        /* Enhanced Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem !important;
-            }
-
-            .header-section {
-                padding: 1.5rem 1rem !important;
-            }
-
-            .header-section h1 {
-                font-size: 1.8rem !important;
-            }
-
-            .form-section {
-                padding: 1.25rem !important;
-            }
-
-            .select2-container--default .select2-selection--single,
-            .select2-container--default .select2-selection--multiple {
-                min-height: 42px !important;
-            }
-
-            .select2-container--default .select2-selection--multiple .select2-selection__choice {
-                padding: 4px 8px !important;
-                margin: 3px !important;
-                font-size: 0.9rem !important;
-            }
-
-            .btn-primary {
-                width: 100% !important;
-                margin-top: 1rem !important;
-            }
-
-            .results-section {
-                margin: 1rem -1rem !important;
-                border-radius: 0 !important;
-            }
-
-            .table td {
-                font-size: 0.9rem !important;
-            }
-
-            .status-badge {
-                font-size: 0.8rem !important;
-                padding: 4px 8px !important;
-            }
-        }
-
-        /* Enhanced Card and Form Styling */
-        .card {
-            border: none !important;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
-        }
-
-        .form-section {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px) !important;
-        }
-
-        .form-label {
-            font-weight: 600 !important;
-            color: #2c3e50 !important;
-            margin-bottom: 0.5rem !important;
-        }
-
-        .form-label i {
-            color: #3498db !important;
-            margin-right: 0.5rem !important;
-        }
-
-        /* Enhanced Button Styling */
-        .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9) !important;
-            border: none !important;
-            padding: 12px 24px !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.5px !important;
-            transition: all 0.3s ease !important;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4) !important;
-        }
-
-        /* Enhanced Table Styling */
-        .table thead th {
-            background: linear-gradient(135deg, #2c3e50, #3498db) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            text-transform: uppercase !important;
-            font-size: 0.85rem !important;
-            letter-spacing: 0.5px !important;
-            padding: 15px !important;
-        }
-
-        .table tbody tr {
-            transition: all 0.2s ease !important;
-        }
-
-        .table tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.05) !important;
-            transform: scale(1.01) !important;
-        }
-
-        /* Enhanced Status Badge Styling */
-        .status-badge {
-            padding: 6px 12px !important;
-            border-radius: 20px !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.5px !important;
-            text-transform: uppercase !important;
-            font-size: 0.75rem !important;
-        }
-
-        .status-badge.likely {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1)) !important;
-            color: #27ae60 !important;
-            border: 1px solid rgba(46, 204, 113, 0.2) !important;
-        }
-
-        .status-badge.unlikely {
-            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1)) !important;
-            color: #c0392b !important;
-            border: 1px solid rgba(231, 76, 60, 0.2) !important;
-        }
-
-        /* Enhanced Animations */
-        .animate__fadeIn {
-            animation-duration: 0.5s !important;
-        }
-
-        .animate__fadeInUp {
-            animation-duration: 0.6s !important;
-        }
-
-        /* Loading Overlay Enhancement */
-        .loading-overlay {
-            backdrop-filter: blur(8px) !important;
-            background: rgba(255, 255, 255, 0.8) !important;
-        }
-
-        .loading-spinner {
-            border-width: 3px !important;
-            border-top-color: #3498db !important;
-        }
-
-        /* Enhanced Branch Dropdown Styling */
-        .select2-container {
-            width: 100% !important;
-            margin-bottom: 0 !important;
-        }
-
-        .select2-container--default .select2-selection--single,
-        .select2-container--default .select2-selection--multiple {
-            border: 2px solid #e0e0e0 !important;
-            border-radius: 12px !important;
-            min-height: 45px !important;
-            background-color: #fff !important;
-            transition: all 0.3s ease !important;
-            padding: 8px !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 28px !important;
-            padding-left: 8px !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 45px !important;
-            right: 8px !important;
-        }
-
-        .select2-dropdown {
-            border: 2px solid #e0e0e0 !important;
-            border-radius: 12px !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-            margin-top: 4px !important;
-            overflow: hidden !important;
-        }
-
-        .select2-container--default .select2-results__option {
             padding: 8px 12px !important;
-            transition: all 0.2s ease !important;
-        }
-
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: #3498db !important;
-            color: white !important;
-        }
-
-        .select2-container--default .select2-results__group {
-            padding: 10px !important;
             font-weight: 600 !important;
             background: #f8f9fa !important;
             color: #2c3e50 !important;
             font-size: 0.9rem !important;
             text-transform: uppercase !important;
             letter-spacing: 0.5px !important;
+            border-bottom: 2px solid #e9ecef !important;
         }
 
-        .select2-container--default .select2-search--dropdown .select2-search__field {
-            border: 2px solid #e0e0e0 !important;
-            border-radius: 8px !important;
-            padding: 8px !important;
-            transition: all 0.3s ease !important;
-        }
-
-        .select2-container--default .select2-search--dropdown .select2-search__field:focus {
-            border-color: #3498db !important;
-            outline: none !important;
-            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25) !important;
-        }
-
-        .course-name {
-            font-size: 0.95rem !important;
-            color: #2c3e50 !important;
-        }
-
-        .badge {
-            font-family: monospace !important;
-            font-size: 0.9rem !important;
+        /* Priority College Badge in Results */
+        .priority-badge {
+            background: linear-gradient(135deg, #ffd700, #ffc107) !important;
+            color: #000 !important;
             padding: 4px 8px !important;
+            border-radius: 12px !important;
+            font-size: 0.8rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
 
-        /* Mobile Optimization for Branch Dropdown */
+        .priority-badge i {
+            color: #000 !important;
+            font-size: 0.7rem !important;
+        }
+
+        /* Mobile Optimization for Priority Colleges */
         @media (max-width: 768px) {
-            .select2-container--default .select2-selection--single,
-            .select2-container--default .select2-selection--multiple {
+            #priority_colleges + .select2-container .select2-selection--multiple {
                 min-height: 42px !important;
-                padding: 6px !important;
             }
 
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                line-height: 24px !important;
+            #priority_colleges + .select2-container .select2-selection__choice {
+                font-size: 0.8rem !important;
+                padding: 4px 10px !important;
             }
 
-            .select2-container--default .select2-results__option {
-                padding: 6px 10px !important;
-                font-size: 0.9rem !important;
-            }
-
-            .select2-container--default .select2-results__group {
-                padding: 8px !important;
-                font-size: 0.85rem !important;
-            }
-
-            .course-name {
-                font-size: 0.9rem !important;
-            }
-
-            .badge {
-                font-size: 0.85rem !important;
+            .priority-badge {
+                font-size: 0.75rem !important;
                 padding: 3px 6px !important;
             }
         }
 
-        /* Appreciation Section Styles */
-        .appreciation-section .card {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border: none;
-            transition: transform 0.3s ease;
-        }
-
-        .appreciation-section .card:hover {
-            transform: translateY(-2px);
-        }
-
-        .appreciation-section .bg-gradient-primary {
-            background: linear-gradient(135deg, #e8f4f8, #ffffff);
-            border: 1px solid #e3f2fd;
-        }
-
-        .appreciation-section .card-body {
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .appreciation-section code {
-            font-family: monospace;
-            font-size: 0.85em;
+        /* Loading Overlay Styles */
+        .select2-priority-tooltip {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 1000;
             white-space: nowrap;
         }
-
-        .appreciation-section .fa-heart {
-            color: #dc3545;
-            filter: drop-shadow(0 0 2px rgba(220, 53, 69, 0.3));
-            font-size: 0.9em;
-        }
-
-        .appreciation-section .fa-star {
-            color: #ffc107;
-            filter: drop-shadow(0 0 2px rgba(255, 193, 7, 0.3));
-            font-size: 0.8em;
-        }
-
-        .appreciation-section .small {
-            font-size: 0.8rem;
-        }
-
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.3); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.3); }
-            70% { transform: scale(1); }
-        }
-
-        .appreciation-section .animate__heartBeat {
-            animation: heartBeat 1.3s ease-in-out infinite;
-        }
-
-        @media (max-width: 768px) {
-            .appreciation-section .card-body {
-                padding: 0.5rem !important;
-                font-size: 0.8rem;
-            }
-            
-            .appreciation-section code {
-                font-size: 0.75em;
-                display: inline-block;
-                margin: 0.25rem 0;
-            }
-
-            .appreciation-section .small {
-                font-size: 0.75rem;
-            }
-
-            .appreciation-section .gap-2 {
-                gap: 0.25rem !important;
-            }
-        }
-
-        /* Loading Overlay Styles */
     </style>
 </head>
 <body>
@@ -1317,7 +1015,7 @@
                             <i class="fas fa-heart text-danger animate__animated animate__heartBeat animate__infinite me-1"></i>
                             <span class="text-primary fw-semibold">Appreciate My Work?</span>
                         </span>
-                        <span class="text-muted small">I built this platform from scratch to help students — completely free .You can  send a small digital gift card to:</span>
+                    <span class="text-muted small">I built this platform from scratch to help students — completely free .You can  send a small digital gift card to:</span>
                         <code class="text-primary bg-light px-2 py-1 rounded">📧 collegecompass.shield594@slmail.me</code>
                         <span class="text-muted small">
                             <i class="fas fa-star text-warning"></i>
@@ -1335,7 +1033,7 @@
             </div>
             <div class="disclaimer-content">
                 <ul class="disclaimer-points">
-                    <li>This website is currently in its beta phase. While we strive to provide accurate and up-to-date information, please note that there may be occasional bugs or updates. Your feedback is greatly appreciated!</li>
+                     <li>This website is currently in its beta phase. While we strive to provide accurate and up-to-date information, please note that there may be occasional bugs or updates. Your feedback is greatly appreciated!</li>
                     <li>This tool currently provides cutoff data for general categories (GM, SC, ST, etc.). Hyderabad-Karnataka (HK) region data will be added in future updates.</li>
                     <li>The predictions are for <strong>informational and educational purposes only</strong> and do not guarantee admission.</li>
                     <li>Actual cutoffs may vary based on reservation policies, seat matrix changes, and updated counseling rounds.</li>
@@ -1497,6 +1195,48 @@
                             </label>
                             <select id="course" name="course" class="form-select">
                                 <option value="">All Branches</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="form-group">
+                            <label for="priority_colleges" class="form-label d-flex align-items-center gap-2">
+                                <i class="fas fa-star"></i> Priority Colleges 
+                                <div class="d-flex gap-1">
+                                    <span class="badge bg-warning text-dark">BETA</span>
+                                    <span class="badge bg-secondary">Optional</span>
+                                </div>
+                                <i class="fas fa-info-circle text-muted" 
+                                   data-bs-toggle="tooltip" 
+                                   data-bs-placement="top" 
+                                   title="Optional feature: Selected colleges will be shown first in the results, regardless of their ranks"></i>
+                            </label>
+                            <div class="alert alert-warning py-1 px-2 mb-2" style="font-size: 0.8rem;">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                Priority feature is in beta. Selected colleges (optional) will appear first, followed by other colleges sorted by rank.
+                            </div>
+                            <select id="priority_colleges" name="priority_colleges" class="form-select" multiple>
+                                <optgroup label="Top Engineering Colleges">
+                                    <option value="1BG_R V College of Engineering">R V College of Engineering, Bengaluru</option>
+                                    <option value="1BO_B M S College of Engineering">B M S College of Engineering, Bengaluru</option>
+                                    <option value="1BT_M S Ramaiah Institute of Technology">M S Ramaiah Institute of Technology, Bengaluru</option>
+                                    <option value="1BS_B N M Institute of Technology">B N M Institute of Technology, Bengaluru</option>
+                                    <option value="1BR_Dayananda Sagar College of Engineering">Dayananda Sagar College of Engineering, Bengaluru</option>
+                                </optgroup>
+                                <optgroup label="Prominent NITs & IIITs">
+                                    <option value="1AM_National Institute of Technology Karnataka">NITK, Surathkal</option>
+                                    <option value="1AP_Indian Institute of Information Technology">IIIT, Dharwad</option>
+                                </optgroup>
+                                <optgroup label="Established Engineering Colleges">
+                                    <option value="1BU_JSS Science & Technology University">JSS Science & Technology University, Mysuru</option>
+                                    <option value="1BY_KLE Technological University">KLE Technological University, Hubballi</option>
+                                    <option value="1BX_Siddaganga Institute of Technology">Siddaganga Institute of Technology, Tumakuru</option>
+                                    <option value="1BW_PES University">PES University, Bengaluru</option>
+                                    <option value="1BV_New Horizon College of Engineering">New Horizon College of Engineering, Bengaluru</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
@@ -1970,6 +1710,76 @@
                     });
                 }
 
+                // Initialize location dropdown with Select2
+                $('#location').select2({
+                    width: '100%',
+                    placeholder: 'Select Location',
+                    allowClear: true,
+                    templateResult: formatLocation,
+                    templateSelection: formatLocationSelection
+                });
+
+                // Initialize priority colleges dropdown with Select2
+                $('#priority_colleges').select2({
+                    width: '100%',
+                    placeholder: 'Select up to 3 colleges to prioritize in results',
+                    allowClear: true,
+                    maximumSelectionLength: 3,
+                    templateResult: formatPriorityCollege,
+                    templateSelection: formatPriorityCollegeSelection
+                }).on('select2:select', function(e) {
+                    // Show a tooltip when a college is selected
+                    const selectedCount = ($(this).val() || []).length;
+                    if (selectedCount > 0) {
+                        $('.select2-container--open').append(
+                            `<div class="select2-priority-tooltip">
+                                Selected colleges will appear first in results
+                            </div>`
+                        );
+                        setTimeout(() => $('.select2-priority-tooltip').fadeOut(500), 2000);
+                    }
+                });
+
+                function formatPriorityCollege(college) {
+                    if (!college.id) return college.text;
+                    return $(`<div class="d-flex align-items-center py-1">
+                        <i class="fas fa-university text-primary me-2"></i>
+                        <span>${college.text}</span>
+                    </div>`);
+                }
+
+                function formatPriorityCollegeSelection(college) {
+                    if (!college.id) return college.text;
+                    return $(`<div class="d-flex align-items-center">
+                        <i class="fas fa-university text-primary me-1"></i>
+                        <span class="text-truncate">${college.text}</span>
+                    </div>`);
+                }
+
+                // Function to sort colleges based on priority
+                function sortCollegesByPriority(colleges) {
+                    const priorityColleges = $('#priority_colleges').val() || [];
+                    
+                    // Separate priority and non-priority colleges
+                    const priorityResults = [];
+                    const normalResults = [];
+                    
+                    colleges.forEach(college => {
+                        const collegeKey = `${college.institute_code}_${college.institute}`;
+                        if (priorityColleges.includes(collegeKey)) {
+                            priorityResults.push(college);
+                        } else {
+                            normalResults.push(college);
+                        }
+                    });
+                    
+                    // Sort normal results by cutoff rank
+                    normalResults.sort((a, b) => a.cutoff_rank - b.cutoff_rank);
+                    
+                    // Combine priority colleges first, then normal results
+                    return [...priorityResults, ...normalResults];
+                }
+
                 currentRequest = $.ajax({
                     url: '/predict',
                     method: 'POST',
@@ -1985,7 +1795,7 @@
 
                         if (Array.isArray(response) && response.length > 0) {
                             // Filter colleges by location if selected
-                            const filteredColleges = filterCollegesByLocation(response, selectedLocation);
+                            let filteredColleges = filterCollegesByLocation(response, selectedLocation);
 
                             if (filteredColleges.length === 0) {
                                 $('#error').removeClass('d-none')
@@ -1993,6 +1803,9 @@
                                 $('#result').addClass('d-none');
                                 return;
                             }
+
+                            // Sort colleges by priority
+                            filteredColleges = sortCollegesByPriority(filteredColleges);
 
                             // Update total colleges count
                             $('.total-colleges-count').text(filteredColleges.length);
@@ -2011,11 +1824,21 @@
                                     '<span class="status-badge likely">Good Match</span>' : 
                                     '<span class="status-badge unlikely">Higher Rank Required</span>';
 
+                                const isPriority = ($('#priority_colleges').val() || []).includes(`${college.institute_code}_${college.institute}`);
+                                const priorityBadge = isPriority ? 
+                                    '<span class="badge bg-warning text-dark ms-2"><i class="fas fa-star"></i> Priority</span>' : 
+                                    '';
+
                                 $('#cutoffTable').append(`
-                                    <tr class="animate__animated animate__fadeIn">
+                                    <tr class="animate__animated animate__fadeIn ${isPriority ? 'table-warning bg-opacity-10' : ''}">
                                         <td>
-                                            <div class="fw-semibold">${college.institute}</div>
-                                            <small class="text-muted">${college.institute_code}</small>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <div class="fw-semibold">${college.institute}</div>
+                                                    <small class="text-muted">${college.institute_code}</small>
+                                                </div>
+                                                ${priorityBadge}
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="fw-semibold">${college.course}</div>
@@ -2056,6 +1879,27 @@
                         $('#error').removeClass('d-none').text(errorMessage);
                     }
                 });
+
+                // Add priority colleges change handler to automatically trigger form submission
+                $('#priority_colleges').on('change', function() {
+                    $('#cutoffForm').submit();
+                });
+
+                function formatLocation(location) {
+                    if (!location.id) return location.text;
+                    return $(`<div class="d-flex align-items-center">
+                        <span class="location-badge">${location.id}</span>
+                        <span class="ms-2">${location.text}</span>
+                    </div>`);
+                }
+
+                function formatLocationSelection(location) {
+                    if (!location.id) return 'All Locations';
+                    return $(`<div class="d-flex align-items-center">
+                        <span class="location-badge">${location.id}</span>
+                        <span class="ms-1">${location.text}</span>
+                    </div>`);
+                }
             });
 
             // Add location change handler to automatically trigger form submission
